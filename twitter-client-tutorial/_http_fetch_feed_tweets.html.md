@@ -12,7 +12,7 @@ You would need to pass the response string to a `JSONTokener` object and pass th
 
 Like previously, you should now use the `Tweet` model to fill up your listview. From the `result` JSONArray, you should get the JSONObject and extract `body` and `title` from the particular object.
 
-The `renderTweets` method adds the `Tweet` object list to the listview but deletes the previous one. This can be fixed, and would be covered in the next lesson of this module.
+The `renderTweets` method adds the `Tweet` object list to the listview but deletes the previous list which was populated from the local files. This can be fixed, and would be covered in the next lesson of this module.
 
 #### Help
 
