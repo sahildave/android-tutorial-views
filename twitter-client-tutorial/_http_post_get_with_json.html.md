@@ -44,3 +44,8 @@ If you're having trouble completing this module, read on for some help.
 
 1. You should set the keys for username and passwords as "username" and "password", otherwise our test won't pass your app.
 2. Set the parameters of `DataOutputStream` as `jObj.toString();`, where jObj is the JSONObject that you have created to put in the credentials.
+
+
+Once completed, you should test your app by deploying it as an Android app. If you are assured that the app works fine, run it with Codelearn launcher 'Android App Codelearn' to get it tested with our Virtual Assistant. You will see a popup here in the browser intimating you of success/error of your submission.
+
+If you have not setup Virtual Assistant yet, get started with the setup [here](http://www.codelearn.org/android-tutorial/twitter/10/setup/setup-virtual-assistant).
