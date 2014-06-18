@@ -1,0 +1,3 @@
+Till now, we were creating and fetching the tweets locally. We had created the login screen and were storing the username and password in our SharedPreferences. In reality, the app should send the username and password entered by the user to a server which would send back a token which can be used to identify the user. The token is used for fetching the twitter feed from the server for the user.
+
+In this module, we would learn all the basic aspects of making HTTP calls to a server and receiving the response. The response can be used for many purposes, but we would be using it to get a token for the user. Further, we would be learning how to get tweets from a server and hook them up with our Listview.
