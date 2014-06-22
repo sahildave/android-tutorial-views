@@ -1,41 +1,47 @@
-In the previous lesson, we did a basic HTTP call for learning how network calling works. This time we would use JSON for sending and receiving data over network. After extracting the required token from the JSON response, we would use it to judge whether the user had already logged in before or not.
+In the previous lesson, we did a basic HTTP POST call and sent a simple `String` as the parameter. We received a String saying "*Hello, <username\>*" and displayed it on the screen as a `Toast` message. 
 
-### Sending & Receiving JSON ###
+In this lesson, we would be sending and receiving `JSON` `String`. The response would be a unique token which would be used to determine the logged-in status of user in the app.
 
-First of all, you would need to tell the server what kind of data you are sending and what kind would you like to receive. You should set both, the `Content-Type` and `Accept` type to `application/json` for this purpose.
 
-Now, instead of sending a string as the parameter, you should create a `JSONObject` and put the required parameters in it and send its string representation.
+### Creating JSON
 
-    ...
-    
-    con.setRequestMethod("POST");
-    ...
-    // We are now sending and receiving JSON,
-    // Set the request properties to JSON.
-    con.setRequestProperty("Content-Type", "application/json");
-	con.setRequestProperty("Accept", "application/json");
-    
-    // Create a JSON object and put two credentials -
-    // the usernameString with "username" key
-    // and passwordString with "password" key
+Instead of sending a string as the parameter that you used in the last lesson, you should now create a `JSONObject` and put the required parameters in it and send its string representation as the parameter.
+
+	//Create JSON Object	
 	JSONObject jObj = new JSONObject();
-	jObj.put(key, value);
-    
-    // Write the JSON's .toString() representation in the OutStream
+	jObj.put("key", "value");
+	..
+	//Add JSON Object's string representation as parameter
+	wr.writeBytes(jObj.toString());
+	
 
 
-Now this way, we would be sending a JSON string which would have username and password from the textfields.
+### Sending and receiving JSON ###
 
-The response would also be a JSON string. Instead of using it directly, like we did last time, you should first convert it to a JSONObject by passing its string representation as a parameter. The key we are interested in is "token" and you should extract the value using .get(...) method. This would be the new `responseString`.
+Before sending the JSON string as parameter, you should set some request properties about the headers of the connection you want.
+	
+	con.setRequestProperty(field, property);
 
-Further, in the `onPostExecute`, you should use this string and save it in the SharedPreferences. Save the `usernameString` and `passwordString` as well. You should now remove the `Toast` object so that the token is not displayed on the screen after login.
+This sets the value of the specified request header `field` to `property`.
+
+### Reading JSON
+
+When you have received the response from the server, convert it to a JSON Object by passing the response string as parameter when creating a response JSON Object.
+From this JSON object, you can extract the value of key by a simple JSONObject#get() method.
+
+	JSONObject json = new JSONObject(jsonString);
+	valueFromJson = json.get(key);
 
 
-### Modify App Flow ###
+### Assignment - Save token from server and modify app flow
 
-You should now edit your code in onCreate to check if token is present or not. If yes, then skip to the `TweetListActivity` just like before.
+1. As we are dealing with JSON now, you should change the `URL` you using to 
 
-Tip: After starting the `TweetListActivity`, you should `finish();` the current activity. This would ensure that if the user clicks the back button while he is in `TweetListActivity`, he should not return to the login screen.
+    	http://app-dev-challenge-endpoint.herokuapp.com/login
+
+2. After receiving the JSON, you should extract the value from the key `token`.
+3. If the response is successfully received, save the token in `SharedPreferences` and create an Intent to open the `TweetListActivity`.
+4. You should now modify the app flow by checking if the token is present in `SharedPreferences` and open the `TweetListActivity` if it is.
 
 
 #### Help
@@ -43,9 +49,8 @@ Tip: After starting the `TweetListActivity`, you should `finish();` the current 
 If you're having trouble completing this module, read on for some help.
 
 1. You should set the keys for username and passwords as "username" and "password", otherwise our test won't pass your app.
-2. Set the parameters of `DataOutputStream` as `jObj.toString();`, where jObj is the JSONObject that you have created to put in the credentials.
+2. Set the request properties of connection to `"application/json"` for `"Accept"` and `"Content-Type"` by using:
 
-
-Once completed, you should test your app by deploying it as an Android app. If you are assured that the app works fine, run it with Codelearn launcher 'Android App Codelearn' to get it tested with our Virtual Assistant. You will see a popup here in the browser intimating you of success/error of your submission.
-
-If you have not setup Virtual Assistant yet, get started with the setup [here](http://www.codelearn.org/android-tutorial/twitter/10/setup/setup-virtual-assistant).
+	    con.setRequestProperty("Content-Type", "application/json");
+		con.setRequestProperty("Accept", "application/json");
+	    

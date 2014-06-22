@@ -1,32 +1,48 @@
-Currently, when new objects are added, it overwrites the previous visible list. In this lesson, we would first find a solution to this problem. Moreover, we would also add a "Refresh" button in the actionbar, which would get more tweets and add them on top.
+Currently, when new objects are added, it overwrites the previous visible list. In this lesson, we would first find a solution to this problem and then would add a "Refresh" button in the actionbar, which would get more tweets and add them on top.
 
-### Not Overwriting Old List
+### Adding Menu items on ActionBar
 
-The major cause of this issue is that our list adapter is being initialized everytime a list is added. First time, the adapter is initialized when tweets from local storage are used. This works fine but as soon as the tweets are fetched from the server, `renderTweets` is again called, which re-initializes the adapter.
+Menu buttons on actionbar can be used for multitude of tasks. You can edit the xml files in the `menu` folder to add, delete or edit menu items on actionbar.
 
-This can be avoided by:
+	<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+		...
+	    <item
+	        android:id="@+id/action_settings"			
+	        android:showAsAction="never"
+	        android:title="@string/action_settings"/>
+		...
+	</menu>
 
-1. Initializing adapter only once, preferably in `onCreate`. You should move the initializing and setting list adapter logic to `onCreate`.
+You can customize the order, visibility and many more aspects of a menu item by adding different identifiers which you can [read about here](http://developer.android.com/guide/topics/resources/menu-resource.html).
 
-2. Modify the `renderTweets` method to take add the new list to the top or at the 0th position of the previous list. 
+### Listening to Menu item click
 
-	    public void renderTweets(List<Tweet> tweets) {
-			//Add the received tweets to the initial list which is set
-			//on the adapter. Remember to add the received list at 
-			//the top of the previous list
-    		tweetsRead.addAll(0, tweets);
-			//Call the notifyDataSetChanged() to refresh the adapter
-    		tweetItemArrayAdapter.notifyDataSetChanged();
-    		...
+Actionbar items dont have a listener like buttons, the actions can be handled by overriding `onOptionsItemSelected` method instead. You should have the id of the view you want to handle and compare it with the Id of the item clicked.
+
+    	public boolean onOptionsItemSelected(MenuItem item) {
+			// get id of clicked item
+    		int id = item.getItemId();
+			..
+    		if (id == R.id.action_refresh) {
+    			//refresh the list
+    			return true;
+    		}
+			..
     	}
-	
 
-### Refresh To Get New Items
+### Assignment - Add refresh button and show new tweets at top
 
-We would create a button in the actionbar which would refresh the list when pressed. This can be done, if the `AsyncFetchTweets` task is called everytime the button is pressed. For doing the above you should:
+#### Refreshing List
 
-1. Separate out the logic calling `AsyncFetchTweets` task into a public method which can be called when needed.
-2. Create a `Menu` item in `tweet_list.xml` and add a click listener which would call the public method which is created in step 1.
+1. Create an item in the actionbar to refresh list. Call `AsyncFetchTweets` task when the button is pressed.
+2. Add the newly fetched tweets the old list.
+
+
+#### Avoiding Overwriting of list
+The major cause overwriting is that our list adapter is being initialized everytime a list is added. First time, the adapter is initialized when tweets from local storage are used. This works fine but as soon as the tweets are fetched from the server, `renderTweets` is again called, which re-initializes the adapter.
+
+1. Initialize adapter only once, preferably in `onCreate`.
+2. Modify the `renderTweets` method to add the new list to the top of the previous list by using a loop or using #addAll(..) method. 
 
 
 #### Help
@@ -39,19 +55,4 @@ If you're having trouble completing this module, read on for some help.
     		AsyncFetchTweets asnyc = new AsyncFetchTweets(this);
     		asnyc.execute();
     	}
-2. Actionbar items dont have a listener like buttons, the actions can be handled by overriding `onOptionsItemSelected` method. You should have the id of the view you want to handle and compare it with the Id of the item clicked.
-
-    	public boolean onOptionsItemSelected(MenuItem item) {
-    		int id = item.getItemId();
-			..
-    		if (id == R.id.action_refresh) {
-    			refreshlist();
-    			return true;
-    		}
-			..
-    	}
-
-
-You should test your app by deploying it as an Android app. If you are assured that the app works fine, run it with Codelearn launcher 'Android App Codelearn' to get it tested with our Virtual Assistant. You will see a popup here in the browser intimating you of success/error of your submission.
-
-If you have not setup Virtual Assistant yet, get started with the setup [here](http://www.codelearn.org/android-tutorial/twitter/10/setup/setup-virtual-assistant).
+2. You can add the new tweets on top of old list by using `#addAll(0, newTweets);` and calling `adapter.notifyDataSetChanged();`
